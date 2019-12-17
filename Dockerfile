@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 
 # Update and install all packages as listed here:
 # http://processors.wiki.ti.com/index.php/Linux_Host_Support_CCSv6#Ubuntu_16.04_64bit
@@ -39,18 +39,14 @@ RUN dpkg --add-architecture i386 && \
         libxtst6:i386 \
         unzip
 
-# Unattended response file generated on Windows using the following command:
-# ccs_setup_8.1.0.00011.exe --save-response-file %TEMP%\ccs_installer_responses.txt --skip-install true
-COPY ccs_installer_responses.txt /x/
-
 # Download and install CCS
 RUN apt-get install -y --no-install-recommends \
         ca-certificates \
         curl \
     && mkdir -p /x \
-    && curl -L http://software-dl.ti.com/ccs/esd/CCSv8/CCS_8_1_0/exports/CCS8.1.0.00011_linux-x64.tar.gz | tar xvz --strip-components=1 -C /x \
+    && curl -L https://downloads.ti.com/ccs/esd/CCSv9/CCS_9_2_0/exports/CCS9.2.0.00013_linux-x64.tar.gz | tar xvz --strip-components=1 -C /x \
     && apt-get remove -y \
         ca-certificates \
         curl \
-    && /x/ccs_setup_linux64_8.1.0.00011.bin --mode unattended --response-file /x/ccs_installer_responses.txt \
+    && /x/ccs_setup_9.2.0.00013.bin --mode unattended --enable-components PF_TM4C \
     && rm -rf /x/
